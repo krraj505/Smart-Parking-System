@@ -17,7 +17,8 @@ def get_dashboard_analytics(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    return AnalyticsService.get_dashboard_metrics(db=db, lot_id=lot_id, days=days)
+    day_count = days if isinstance(days, int) else 7
+    return AnalyticsService.get_dashboard_metrics(db=db, lot_id=lot_id, days=day_count)
 
 @router.get("/export-csv")
 def export_analytics_csv(
@@ -25,8 +26,9 @@ def export_analytics_csv(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    csv_content = AnalyticsService.generate_csv_report(db=db, report_type=report_type)
-    filename = f"smart_parking_{report_type}_report.csv"
+    rep_type = report_type if isinstance(report_type, str) and not hasattr(report_type, "default") else "reservations"
+    csv_content = AnalyticsService.generate_csv_report(db=db, report_type=rep_type)
+    filename = f"smart_parking_{rep_type}_report.csv"
     return Response(
         content=csv_content,
         media_type="text/csv",

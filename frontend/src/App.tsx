@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { AppLayout } from './components/layout/AppLayout';
 
@@ -22,53 +22,14 @@ import { UserManagementPage } from './pages/admin/UserManagementPage';
 import { PricingManagementPage } from './pages/admin/PricingManagementPage';
 import { AuditLogsPage } from './pages/admin/AuditLogsPage';
 
-import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
-
-const ProtectedRoute: React.FC<{ children: React.ReactNode; requiredRoles?: string[] }> = ({
-  children,
-  requiredRoles,
-}) => {
-  const { isAuthenticated, isLoading, role } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-navy-950">
-        <div className="w-8 h-8 border-4 border-electric-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (requiredRoles && !requiredRoles.includes(role)) {
-    return <Navigate to="/" replace />;
-  }
-
-  return <>{children}</>;
-};
-
 export const App: React.FC = () => {
   return (
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            {/* Public Routes */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-
-            {/* Main Application Layout Routes */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
-              }
-            >
+            {/* Direct App Layout (Authentication-Free for College Demonstration) */}
+            <Route path="/" element={<AppLayout />}>
               <Route index element={<DashboardPage />} />
               <Route path="find-parking" element={<FindParkingPage />} />
               <Route path="slot-management" element={<SlotManagementPage />} />
@@ -76,54 +37,25 @@ export const App: React.FC = () => {
               <Route path="reservations/:id" element={<ReservationsPage />} />
               <Route path="parking-lots" element={<ParkingLotsPage />} />
               <Route path="vehicles" element={<VehiclesPage />} />
-              <Route
-                path="entry-exit"
-                element={
-                  <ProtectedRoute requiredRoles={['operator', 'admin']}>
-                    <EntryExitPage />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="entry-exit" element={<EntryExitPage />} />
               <Route path="payments" element={<PaymentsPage />} />
               <Route path="analytics" element={<AnalyticsPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="help" element={<HelpPage />} />
 
-              {/* Administrator Dedicated Routes */}
-              <Route
-                path="admin"
-                element={
-                  <ProtectedRoute requiredRoles={['admin']}>
-                    <AdminDashboardPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="admin/users"
-                element={
-                  <ProtectedRoute requiredRoles={['admin']}>
-                    <UserManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="admin/pricing"
-                element={
-                  <ProtectedRoute requiredRoles={['admin']}>
-                    <PricingManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="admin/audit-logs"
-                element={
-                  <ProtectedRoute requiredRoles={['admin']}>
-                    <AuditLogsPage />
-                  </ProtectedRoute>
-                }
-              />
+              {/* Administrative Governance Views */}
+              <Route path="admin" element={<AdminDashboardPage />} />
+              <Route path="admin/users" element={<UserManagementPage />} />
+              <Route path="admin/pricing" element={<PricingManagementPage />} />
+              <Route path="admin/audit-logs" element={<AuditLogsPage />} />
             </Route>
+
+            {/* Redirect any legacy auth endpoints immediately to main dashboard */}
+            <Route path="/login" element={<Navigate to="/" replace />} />
+            <Route path="/register" element={<Navigate to="/" replace />} />
+            <Route path="/signin" element={<Navigate to="/" replace />} />
+            <Route path="/signup" element={<Navigate to="/" replace />} />
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

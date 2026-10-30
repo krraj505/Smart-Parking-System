@@ -126,10 +126,6 @@ export const SlotManagementPage: React.FC = () => {
 
   // Open reservation modal for slot
   const handleOpenReserve = async () => {
-    if (!isAuthenticated) {
-      navigate('/login');
-      return;
-    }
     try {
       const vehicles = await api.getVehicles();
       setUserVehicles(vehicles);

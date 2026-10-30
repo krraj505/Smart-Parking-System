@@ -15,85 +15,67 @@ interface AuthContextType {
   refreshUser: () => Promise<void>;
 }
 
+const DEFAULT_DEMO_USER: User = {
+  id: 1,
+  email: 'admin@smartparking.com',
+  full_name: 'Smart Parking Admin',
+  phone: '+91 98765 43210',
+  role: 'admin',
+  is_active: true,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('smart_parking_token'));
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<User>(DEFAULT_DEMO_USER);
+  const [token] = useState<string | null>('demo_mode_token');
+  const [isLoading] = useState<boolean>(false);
 
   const refreshUser = async () => {
-    if (!token) {
-      setUser(null);
-      setIsLoading(false);
-      return;
-    }
     try {
       const me = await api.getMe();
-      setUser(me);
+      if (me && me.id) {
+        setUser(me);
+      }
     } catch {
-      localStorage.removeItem('smart_parking_token');
-      setToken(null);
-      setUser(null);
-    } finally {
-      setIsLoading(false);
+      // Retain active demonstration user
     }
   };
 
   useEffect(() => {
     refreshUser();
-  }, [token]);
+  }, []);
 
-  const login = async (email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      const res = await api.login(email, password);
-      localStorage.setItem('smart_parking_token', res.access_token);
-      setToken(res.access_token);
-      setUser(res.user);
-    } finally {
-      setIsLoading(false);
-    }
+  const login = async () => {
+    // Direct college demonstration mode: credentials not required
   };
 
-  const register = async (data: { email: string; password: string; full_name: string; phone?: string }) => {
-    setIsLoading(true);
-    try {
-      const res = await api.register(data);
-      localStorage.setItem('smart_parking_token', res.access_token);
-      setToken(res.access_token);
-      setUser(res.user);
-    } finally {
-      setIsLoading(false);
-    }
+  const register = async () => {
+    // Direct college demonstration mode: registration not required
   };
 
   const logout = () => {
-    localStorage.removeItem('smart_parking_token');
-    setToken(null);
-    setUser(null);
+    // Direct college demonstration mode: session remains active
   };
 
   const switchDemoRole = async (targetRole: UserRole) => {
-    setIsLoading(true);
-    const demoAccounts: Record<UserRole, { email: string; pass: string }> = {
-      customer: { email: 'customer@smartparking.com', pass: 'Customer@12345' },
-      operator: { email: 'operator@smartparking.com', pass: 'Operator@12345' },
-      admin: { email: 'admin@smartparking.com', pass: 'Admin@12345' },
+    const rolesMap: Record<UserRole, { name: string; email: string }> = {
+      admin: { name: 'Smart Parking Admin', email: 'admin@smartparking.com' },
+      operator: { name: 'Gate Operator', email: 'operator@smartparking.com' },
+      customer: { name: 'Vikram Verma (Customer)', email: 'customer@smartparking.com' },
     };
-
-    const target = demoAccounts[targetRole];
-    try {
-      const res = await api.login(target.email, target.pass);
-      localStorage.setItem('smart_parking_token', res.access_token);
-      setToken(res.access_token);
-      setUser(res.user);
-    } finally {
-      setIsLoading(false);
-    }
+    const info = rolesMap[targetRole] || rolesMap.admin;
+    setUser(prev => ({
+      ...prev,
+      full_name: info.name,
+      email: info.email,
+      role: targetRole,
+    }));
   };
 
-  const role: UserRole = user?.role || 'customer';
+  const role: UserRole = user?.role || 'admin';
 
   return (
     <AuthContext.Provider
@@ -101,8 +83,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         token,
         role,
-        isAuthenticated: !!user,
-        isLoading,
+        isAuthenticated: true,
+        isLoading: false,
         login,
         register,
         logout,

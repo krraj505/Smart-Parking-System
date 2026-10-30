@@ -21,7 +21,6 @@ export const SettingsPage: React.FC = () => {
 
   const [fullName, setFullName] = useState(user?.full_name || '');
   const [phone, setPhone] = useState(user?.phone || '');
-  const [password, setPassword] = useState('');
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [saveLoading, setSaveLoading] = useState(false);
 
@@ -33,11 +32,9 @@ export const SettingsPage: React.FC = () => {
       await api.updateProfile({
         full_name: fullName,
         phone: phone || undefined,
-        password: password.trim() ? password : undefined,
       });
       await refreshUser();
       setSaveSuccess('Profile updated successfully!');
-      setPassword('');
       setTimeout(() => setSaveSuccess(null), 3000);
     } catch (err: any) {
       alert(err.message || 'Failed to update profile.');
@@ -136,14 +133,13 @@ export const SettingsPage: React.FC = () => {
 
             <div>
               <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
-                New Password (leave blank to keep current)
+                Access Level
               </label>
               <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-electric-500"
+                type="text"
+                disabled
+                value="Smart Parking Admin (Direct Evaluation Access)"
+                className="w-full px-3 py-2 text-xs bg-slate-100 dark:bg-navy-800/60 border border-slate-200 dark:border-navy-700 rounded-xl text-slate-500 dark:text-slate-400 font-semibold cursor-not-allowed"
               />
             </div>
           </div>

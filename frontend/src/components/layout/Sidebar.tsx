@@ -19,14 +19,13 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
-  LogOut,
   Zap,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const { user, role, logout } = useAuth();
+  const { user } = useAuth();
 
   const mainNav = [
     { name: 'Overview Dashboard', path: '/', icon: LayoutDashboard },
@@ -35,9 +34,7 @@ export const Sidebar: React.FC = () => {
     { name: 'Parking Lots', path: '/parking-lots', icon: Building2 },
     { name: 'Smart Slot Management', path: '/slot-management', icon: Grid },
     { name: 'Vehicle Management', path: '/vehicles', icon: Car },
-    ...(role === 'operator' || role === 'admin'
-      ? [{ name: 'Entry & Exit Gate', path: '/entry-exit', icon: DoorOpen }]
-      : []),
+    { name: 'Entry & Exit Gate', path: '/entry-exit', icon: DoorOpen },
     { name: 'Payments', path: '/payments', icon: CreditCard },
     { name: 'Analytics & Reports', path: '/analytics', icon: BarChart3 },
     { name: 'Notifications', path: '/notifications', icon: Bell },
@@ -118,73 +115,52 @@ export const Sidebar: React.FC = () => {
         </div>
 
         {/* Administrator Section */}
-        {role === 'admin' && (
-          <div>
-            {!collapsed && (
-              <p className="px-3 mb-2 text-[11px] font-semibold text-amber-500 uppercase tracking-wider">
-                System Administration
-              </p>
-            )}
-            <nav className="space-y-1">
-              {adminNav.map(item => {
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    className={({ isActive }) =>
-                      `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                        isActive
-                          ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20 font-semibold shadow-sm'
-                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-navy-800 hover:text-slate-900 dark:hover:text-white'
-                      }`
-                    }
-                    title={collapsed ? item.name : undefined}
-                  >
-                    <Icon className="w-5 h-5 flex-shrink-0" />
-                    {!collapsed && <span className="truncate">{item.name}</span>}
-                  </NavLink>
-                );
-              })}
-            </nav>
-          </div>
-        )}
+        <div>
+          {!collapsed && (
+            <p className="px-3 mb-2 text-[11px] font-semibold text-amber-500 uppercase tracking-wider">
+              System Administration
+            </p>
+          )}
+          <nav className="space-y-1">
+            {adminNav.map(item => {
+              const Icon = item.icon;
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                      isActive
+                        ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20 font-semibold shadow-sm'
+                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-navy-800 hover:text-slate-900 dark:hover:text-white'
+                    }`
+                  }
+                  title={collapsed ? item.name : undefined}
+                >
+                  <Icon className="w-5 h-5 flex-shrink-0" />
+                  {!collapsed && <span className="truncate">{item.name}</span>}
+                </NavLink>
+              );
+            })}
+          </nav>
+        </div>
       </div>
 
-      {/* Footer Profile Pill */}
+      {/* Footer Profile Pill (Neutral Console Operator Display) */}
       <div className="p-3 border-t border-slate-200 dark:border-navy-800 bg-slate-50 dark:bg-navy-950/40">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-navy-750 flex items-center justify-center font-bold text-sm text-slate-700 dark:text-slate-200 flex-shrink-0">
-              {user?.full_name?.charAt(0) || 'U'}
-            </div>
-            {!collapsed && (
-              <div className="leading-tight truncate">
-                <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">
-                  {user?.full_name || 'Guest User'}
-                </p>
-                <span
-                  className={`inline-block px-1.5 py-0.2 text-[10px] rounded uppercase font-bold tracking-wider mt-0.5 ${
-                    role === 'admin'
-                      ? 'bg-amber-500/20 text-amber-400'
-                      : role === 'operator'
-                      ? 'bg-purple-500/20 text-purple-400'
-                      : 'bg-emerald-500/20 text-emerald-400'
-                  }`}
-                >
-                  {role}
-                </span>
-              </div>
-            )}
+        <div className="flex items-center gap-2.5 overflow-hidden">
+          <div className="w-9 h-9 rounded-xl bg-electric-500/10 dark:bg-electric-500/20 text-electric-500 flex items-center justify-center font-bold text-sm flex-shrink-0">
+            {user?.full_name?.charAt(0) || 'A'}
           </div>
           {!collapsed && (
-            <button
-              onClick={logout}
-              className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-              title="Logout"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
+            <div className="leading-tight truncate">
+              <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">
+                {user?.full_name || 'Smart Parking Admin'}
+              </p>
+              <span className="inline-block px-1.5 py-0.2 text-[10px] rounded uppercase font-bold tracking-wider mt-0.5 bg-amber-500/20 text-amber-400">
+                ADMIN
+              </span>
+            </div>
           )}
         </div>
       </div>

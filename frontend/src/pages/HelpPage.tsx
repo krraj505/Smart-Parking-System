@@ -25,34 +25,33 @@ export const HelpPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Demo Credentials Card */}
+      {/* College Demonstration Mode Card */}
       <div className="p-5 rounded-2xl bg-gradient-to-br from-electric-600/10 to-indigo-600/10 border border-electric-500/20 shadow-sm space-y-3">
         <div className="flex items-center gap-2 text-electric-500 font-bold text-sm">
-          <KeyRound className="w-4 h-4" />
-          <span>Demo Personas & Evaluation Credentials</span>
+          <Shield className="w-4 h-4" />
+          <span>College Project Demonstration Mode (Direct Dashboard Access)</span>
         </div>
-        <p className="text-xs text-slate-600 dark:text-slate-300">
-          The application comes seeded with three roles. You can either log in with these credentials or use the instant
-          <span className="font-bold text-electric-500"> "Role Switcher"</span> in the top navigation bar.
+        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          Authentication and registration screens have been completely removed for this presentation. The application opens directly to the Smart Parking Dashboard with full administrative and operator permissions, enabling seamless evaluation of the interactive slot grid, intelligent allocation engine, gate operations, and reporting features without credential prompts.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
           <div className="p-3 rounded-xl bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 text-xs">
-            <span className="font-bold text-amber-500 block uppercase text-[10px]">Administrator</span>
-            <p className="font-mono text-slate-900 dark:text-white mt-1">admin@smartparking.com</p>
-            <p className="text-slate-400 text-[11px]">Pass: Admin@12345</p>
+            <span className="font-bold text-amber-500 block uppercase text-[10px]">Active Persona</span>
+            <p className="font-semibold text-slate-900 dark:text-white mt-1">Smart Parking Admin</p>
+            <p className="text-slate-400 text-[11px]">System Administration & Full Oversight</p>
           </div>
 
           <div className="p-3 rounded-xl bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 text-xs">
-            <span className="font-bold text-purple-500 block uppercase text-[10px]">Gate Operator</span>
-            <p className="font-mono text-slate-900 dark:text-white mt-1">operator@smartparking.com</p>
-            <p className="text-slate-400 text-[11px]">Pass: Operator@12345</p>
+            <span className="font-bold text-electric-500 block uppercase text-[10px]">Barrier Operations</span>
+            <p className="font-semibold text-slate-900 dark:text-white mt-1">Gate Entry & Exit Console</p>
+            <p className="text-slate-400 text-[11px]">Check-in, Check-out & Barrier Simulator</p>
           </div>
 
           <div className="p-3 rounded-xl bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 text-xs">
-            <span className="font-bold text-emerald-500 block uppercase text-[10px]">Customer</span>
-            <p className="font-mono text-slate-900 dark:text-white mt-1">customer@smartparking.com</p>
-            <p className="text-slate-400 text-[11px]">Pass: Customer@12345</p>
+            <span className="font-bold text-emerald-500 block uppercase text-[10px]">Map-Free Grid</span>
+            <p className="font-semibold text-slate-900 dark:text-white mt-1">Interactive Bay Matrix</p>
+            <p className="text-slate-400 text-[11px]">Real-time Status, EV Charger & Multi-Floor</p>
           </div>
         </div>
       </div>
